@@ -61,3 +61,26 @@ ai-init .
 3. 打开生成的 `AGENTS.md`，补充项目专属规则。
 4. 让 AI 读取 `AGENTS.md` 和 `docs/` 下的文档，做第一次项目认知扫描。
 
+## 系统兼容性限制
+
+当前脚本是按照 macOS + zsh 环境编写的，脚本头部使用：
+
+```bash
+#!/bin/zsh
+```
+
+不同系统使用时需要注意：
+
+- macOS：推荐使用方式，默认自带 zsh，可以直接使用本文档里的命令。
+- Linux：如果系统没有 zsh，需要先安装 zsh，或者把脚本第一行改成 `#!/bin/bash` 后再使用。Linux 下的项目路径也需要改成自己的真实路径。
+- Windows：不能在原生 CMD 或 PowerShell 里直接运行这个 `.sh` 脚本。推荐使用 WSL、Git Bash 或其他类 Unix shell 环境；如果要在 PowerShell 原生环境使用，需要另外写 `.ps1` 脚本。
+
+`ai-init` 这个命令也不是系统自带命令。macOS 和 Linux 通常写入 `~/.zshrc` 或 `~/.bashrc`；Windows 的 WSL / Git Bash 也需要写入对应 shell 的配置文件。
+
+## 其他限制
+
+- 当前脚本只负责初始化协议文件和基础文档，不会自动分析项目代码，也不会自动补全项目专属规则。
+- 如果目标项目里已经存在同名文件，脚本会跳过，不会覆盖已有内容。
+- 当前脚本使用的是本机固定模板目录：`/Users/lingxr/Documents/myproduct/ai-development/templates`。如果移动了这个项目目录，需要同步修改脚本里的 `TEMPLATE_DIR`。
+- 这个工具只创建通用 AI 协议文件，不会自动配置第三方工具账号、API Key、MCP 服务或插件权限。
+- Antigravity 目前不会自动读取专属配置文件，需要在对话里手动要求它读取 `AGENTS.md`。
