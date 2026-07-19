@@ -9,11 +9,16 @@
 - `AGENTS.md`：Codex / OpenCode 使用的项目规则
 - `CLAUDE.md`：Claude Code 使用的项目规则
 - `GEMINI.md`：Gemini CLI 使用的项目规则
+- `PROJECT.md`：产品规划、需求说明、IPSI-G Gate 状态和需求变化记录
 - `docs/project-map.md`：项目地图
 - `docs/architecture.md`：架构说明
 - `docs/data-flow.md`：数据流说明
 - `docs/decision-log.md`：技术决策记录
 - `docs/learning-notes.md`：学习记录
+- `prompts/github-review.md`：GitHub PR 评审提示词
+- `prompts/feature-design.md`：功能设计提示词
+- `prompts/bug-fix.md`：问题修复提示词
+- `prompts/refactor.md`：重构提示词
 
 如果目标文件已经存在，脚本会跳过，不会覆盖已有内容。
 
@@ -58,8 +63,9 @@ ai-init .
 
 1. 进入你要初始化的项目目录。
 2. 执行 `ai-init .`。
-3. 打开生成的 `AGENTS.md`，补充项目专属规则。
-4. 让 AI 读取 `AGENTS.md` 和 `docs/` 下的文档，做第一次项目认知扫描。
+3. 打开生成的 `PROJECT.md`，按 IPSI-G 补充想法、产品、系统和 Gate 状态。
+4. 打开生成的 `AGENTS.md`，补充项目专属规则。
+5. 让 AI 读取 `PROJECT.md`、`AGENTS.md` 和 `docs/` 下的文档，先做 IPSI-G 分析，不要直接写代码。
 
 ## 系统兼容性限制
 
