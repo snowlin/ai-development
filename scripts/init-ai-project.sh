@@ -48,7 +48,7 @@ if [ ! -w "$PROJECT_DIR" ]; then
   exit 1
 fi
 
-for REQUIRED_TEMPLATE in AGENTS.md CLAUDE.md GEMINI.md docs/gates.md .gemini/settings.json; do
+for REQUIRED_TEMPLATE in AGENTS.md CLAUDE.md GEMINI.md docs/gates.md docs/git-workflow.md .gemini/settings.json; do
   if [ ! -f "$TEMPLATE_DIR/$REQUIRED_TEMPLATE" ]; then
     echo "错误：缺少模板文件"
     echo "$TEMPLATE_DIR/$REQUIRED_TEMPLATE"
@@ -250,6 +250,11 @@ upgrade_protocol_file \
   "$TEMPLATE_DIR/docs/gates.md" \
   "$PROJECT_DIR/docs/gates.md" \
   "docs/gates.md"
+
+merge_from_file \
+  "$TEMPLATE_DIR/docs/git-workflow.md" \
+  "$PROJECT_DIR/docs/git-workflow.md" \
+  "docs/git-workflow.md"
 
 merge_project_doc() {
   TARGET="$1"
@@ -832,6 +837,7 @@ merge_project_doc() {
 | docs/data-flow.md | 待补充 | 待补充 |
 | docs/decision-log.md | 待补充 | 待补充 |
 | docs/learning-notes.md | 待补充 | 待补充 |
+| docs/git-workflow.md | 待补充 | 涉及分支、提交、PR、review、合并或回滚时更新 |
 | README.md | 待补充 | 待补充 |
 
 ### 文档事实来源
@@ -854,6 +860,29 @@ merge_project_doc() {
 | 关键调用链 | 待补充 |
 | 风险点 | 待补充 |
 | 是否需要二次 review | 待补充 |
+
+## Productization Boundary
+
+### 是否从个人工具进入产品化
+
+待补充。
+
+### 当前形态
+
+Personal Tool / Internal Tool / Beta Product / Paid Product / 待补充
+
+### 产品化边界检查
+
+| 项目 | 状态 | 说明 |
+| --- | --- | --- |
+| 目标使用者 | 待补充 | 只有自己 / 少量熟人 / 真实用户 / 团队 / 客户 |
+| 数据归属 | 待补充 | 是否需要 owner_id 或 user_id |
+| AI/API 成本行为 | 待补充 | 是否需要 usage_events |
+| 权益和额度 | 待补充 | 是否需要 plan、quota 或 feature entitlement |
+| BYOK / 支付 | 待补充 | 是否需要 BYOK、手动 Pro 或支付 |
+| 暂不实现的依据 | 待补充 | 为什么现在可以不做用户体系 |
+| 未来触发条件 | 待补充 | 什么时候必须补齐 |
+| 最小预留策略 | 待补充 | current_user、owner_id/user_id、usage_events、plan/quota |
 
 ## Verification
 
@@ -969,6 +998,8 @@ Prototype / Internal Tool / Beta / Production / 待补充
 | AI-XP Feedback | 未确认 | 待补充 |
 | Documentation | 未确认 | 待补充 |
 | Review Load Budget | 未确认 | 待补充 |
+| Git Management | 未确认 | 待补充 |
+| Productization Boundary | 未确认 | 待补充 |
 | Verification | 激活 | 默认激活，用于交付前验证 |
 | Production Readiness | 未确认 | 待补充 |
 | Release / Rollback | 未确认 | 待补充 |
@@ -992,6 +1023,8 @@ Prototype / Internal Tool / Beta / Production / 待补充
 | AI-XP Feedback Gate | 未确认 | 待补充 |
 | Documentation Gate | 未确认 | 待补充 |
 | Review Load Budget Gate | 未确认 | 待补充 |
+| Git Management Gate | 未确认 | 待补充 |
+| Productization Boundary Gate | 未确认 | 待补充 |
 | Verification Gate | 未确认 | 待补充 |
 | Production Readiness Gate | 未确认 | 待补充 |
 | Release / Rollback Gate | 未确认 | 待补充 |
@@ -1087,6 +1120,7 @@ echo "- Claude Code：CLAUDE.md"
 echo "- Gemini CLI：.gemini/settings.json + GEMINI.md fallback"
 echo "- Antigravity：优先读取 AGENTS.md，必要时参考 GEMINI.md fallback"
 echo "- 详细 Gate：docs/gates.md"
+echo "- Git 管理规范：docs/git-workflow.md"
 echo ""
 echo "下一步："
 echo "1. 先补 PROJECT.md，完成 IPSI-G 的产品和系统定义"
@@ -1098,11 +1132,13 @@ echo "6. UI 草图确认后，再进入实现"
 echo "7. 涉及高风险判断时，执行 Human Judgment Gate，区分事实、推测、反例和人的判断"
 echo "8. 多轮对话、阶段切换或上下文混乱时，执行 Context Management Gate"
 echo "9. 将决策、实现、验证或发布交给 AI 前，执行 Trust Calibration Gate"
-echo "10. 涉及 UI、数据、安全、性能、AI、依赖、成本、兼容或 AI-XP 时，只读取 docs/gates.md 中对应 Gate"
+echo "10. 涉及 UI、数据、安全、性能、AI、依赖、成本、兼容、AI-XP、Git 管理或产品化边界时，只读取 docs/gates.md 中对应 Gate"
 echo "11. 进入实现前，说明 TDD 状态和验证方式"
 echo "12. Review AI 生成 diff 前，选择 Light / Targeted / Full Review"
 echo "13. 验证前，先选择 Light / Targeted / Full Verification"
-echo "14. 原型进入真实用户、生产、团队协作或长期维护前，执行 Production Readiness Gate"
-echo "15. 验证通过后，如需小重构，只做一次并再次验证"
-echo "16. 交付前，完成文档、验证、发布和回滚检查"
+echo "14. 涉及分支、提交、PR、合并或回滚时，读取 docs/git-workflow.md"
+echo "15. 个人工具、原型或内部工具准备给别人用、未来收费或产生 AI/API 成本时，执行 Productization Boundary Gate"
+echo "16. 原型进入真实用户、生产、团队协作或长期维护前，执行 Production Readiness Gate"
+echo "17. 验证通过后，如需小重构，只做一次并再次验证"
+echo "18. 交付前，完成文档、验证、发布和回滚检查"
 echo ""

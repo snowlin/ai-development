@@ -1,5 +1,5 @@
 # AGENTS.md
-Version: 2.14
+Version: 2.16
 
 # AI Development Protocol
 
@@ -20,6 +20,7 @@ Version: 2.14
 - `PROJECT.md`：产品规划、需求说明、系统边界、MVP 范围和需求变化的事实来源。
 - `docs/gates.md`：详细 Gate 清单。只在对应 Gate 被激活时读取相关章节。
 - `docs/project-map.md`、`docs/architecture.md`、`docs/data-flow.md`、`docs/decision-log.md`、`docs/learning-notes.md`：项目认知文档。
+- `docs/git-workflow.md`：Git 分支、提交、PR、review、合并、回滚和 AI 协作规范。
 
 如果其它规则文件与本文件冲突，以本文件为准。
 
@@ -51,6 +52,7 @@ Version: 2.14
 2. 读取本文件，确认任务等级、Gate 触发条件和确认策略。
 3. 根据任务触发的 Gate，读取 `docs/gates.md` 中对应章节。
 4. 根据代码位置读取 `docs/project-map.md`、`docs/architecture.md`、`docs/data-flow.md`、`docs/decision-log.md` 或 `docs/learning-notes.md`。
+5. 涉及分支、提交、暂存、PR、review、合并或回滚时，读取 `docs/git-workflow.md`。
 
 Token 控制：
 
@@ -268,7 +270,51 @@ Token 控制：
 - review 负担与风险匹配。
 - 用户知道必须看的文件、调用链和风险点。
 
-### 3.12 Production Readiness Gate
+### 3.12 Git Management Gate
+
+触发条件：
+
+- 用户要求创建分支、提交、暂存、推送、创建 PR、合并、回滚或处理冲突。
+- AI 修改了代码、脚本、配置、提示词或项目协议，准备交付 diff。
+- 工作区存在未提交改动、暂存改动或用户改动。
+
+执行动作：
+
+- 读取 `docs/git-workflow.md`，按项目 Git 规范执行。
+- 先查看 `git status --short`，区分未暂存、已暂存和非本次改动。
+- 只处理本次闭环范围内的文件，不回滚、不覆盖用户已有改动。
+- 提交、推送、创建 PR、合并、回滚、删除分支或重写历史前必须得到用户确认。
+- 交付时说明分支、改动范围、验证结果、未验证项、Review 级别和回滚方式。
+
+通过标准：
+
+- Git 历史能说明每次改动的意图、验证和回退方式。
+- 用户改动不会被 AI 顺手覆盖。
+- 主分支保持接近可发布状态。
+
+### 3.13 Productization Boundary Gate
+
+触发条件：
+
+- 个人工具、原型或内部工具准备给真实用户、团队成员、客户或公开访客使用。
+- 项目同时满足至少 2 个条件：有 AI/API 成本；有保存、历史、笔记、知识库、报告或导出；未来可能收费、分套餐、限制额度或支持 BYOK；用户数据需要隔离。
+- 用户说“先自己用，以后可能上线”“临近发布才发现缺用户体系”“这个以后可能收费”。
+
+执行动作：
+
+- 明确当前形态是 Personal Tool、Internal Tool、Beta Product 还是 Paid Product。
+- 判断是否需要最小身份、数据归属、使用记录、权益边界和成本控制。
+- 如果暂不做用户体系，必须写出延后条件和未来补齐触发点。
+- 如果需要预留边界，至少定义 `current_user`、`owner_id` 或 `user_id`、`usage_events`、`plan/quota` 的最小策略。
+- 禁止把支付接入当作商业化第一步；先确认用户身份、使用记录、权益边界和成本控制。
+
+通过标准：
+
+- 能说明哪些数据和 AI 行为属于谁。
+- 能说明谁还能用多少、哪些功能需要更高权益、超额时怎么处理。
+- 个人工具升级为产品时，不需要推倒核心数据流重来。
+
+### 3.14 Production Readiness Gate
 
 触发条件：
 
@@ -285,6 +331,24 @@ Token 控制：
 
 - 能说明是否可上线、为什么可上线、失败后谁处理。
 - 原型到生产的缺口被列出并有处理计划。
+
+### 3.15 数据库与开发资产保护
+
+触发条件：
+
+- 编写或运行自动化测试（`pytest`、单元测试、集成测试）。
+- 修改数据库模型、迁移脚本或数据库配置。
+- 涉及用户人工审核数据（如 `human_reviewed=True`）、配置数据或持久化资产。
+
+执行动作：
+
+- **测试引擎必须强制隔离**：所有自动化测试必须使用独立的内存数据库（如 `sqlite:///:memory:`）或独立的测试临时数据库，**严禁在测试固件中对开发/生产数据库（`ai_era_signals.db`）执行 `drop_all`、`truncate` 或毁灭性擦除操作**。
+- **保护人工资产**：用户手动审核、修改、标注的数据属于核心数据资产。任何可能导致开发数据库重置的操作，必须事前进行提示。
+
+通过标准：
+
+- 运行测试不会抹掉开发数据库中的任何历史记录。
+- 测试环境与真实/开发环境的数据完全隔离。
 
 ---
 
@@ -351,6 +415,8 @@ Idea Gate
 | Context Management | 多轮对话、上下文切换、连续错误、过期事实 | 可信上下文、冲突项、重开或压缩建议 | 避免上下文污染 |
 | Trust Calibration | 将决策、实现、验证或发布交给 AI | AI 权限级别、人类确认点、禁止项 | 信任与风险匹配 |
 | Review Load Budget | AI 生成 diff、多人 review、核心路径变更 | Review 级别、必看文件、风险焦点 | review 负担与风险匹配 |
+| Git Management | 分支、暂存、提交、PR、合并、回滚、冲突处理或交付 diff | Git 状态、改动范围、提交策略、Review 级别、回滚方式 | Git 历史清晰且不覆盖用户改动 |
+| Productization Boundary | 个人工具、原型或内部工具可能进入真实用户、收费、分套餐或用户数据隔离 | 当前形态、身份边界、数据归属、使用记录、权益和成本控制 | 产品化前不遗漏用户、额度和归属地基 |
 | Production Readiness | 原型进入真实用户、生产、团队协作或长期维护 | 阶段、上线缺口、监控、回滚、owner | 不把原型伪装成生产 |
 | Dependency | 新增、升级、移除依赖或运行时 | 版本、用途、替代、维护、安全/许可证 | 依赖成本和风险可说明 |
 | Cost | API、模型、存储、云资源、持续任务 | 计费单位、频率、预算、控制方式 | 成本上限可见 |
@@ -457,6 +523,7 @@ Idea Gate
 本文件只定义 AI 开发协议和 Gate 触发规则。
 
 详细检查表、参考标准和各 Gate 的问题清单在 `docs/gates.md`。
+Git 分支、提交、PR、review、合并和回滚规范在 `docs/git-workflow.md`。
 
 工具专属文件职责：
 
