@@ -633,7 +633,44 @@ AI 可直接做:
 
 ---
 
-## 16. TDD Gate
+## 16. CS Core / Mental Model Gate
+
+触发条件：
+
+- 涉及算法复杂度、数据结构、性能瓶颈、并发异步、网络请求、缓存、安全、权限、跨模块 Bug 或架构取舍。
+- AI 给出的方案会影响长期可维护性、资源消耗、数据正确性或安全边界。
+- 用户表达“看不懂”“不知道为什么这样写”“以后我能不能接管”。
+
+必须回答：
+
+- 这里涉及哪个计算机科学核心概念？
+- AI 方案的时间复杂度、空间复杂度、边界条件或失败场景是什么？
+- 数据量、并发量、用户量或调用频率变大后会发生什么？
+- 是否涉及网络、异步、缓存、权限、安全或资源调度？
+- 人类开发者必须理解哪 1-3 个知识点才能接管这段代码？
+- 是否需要记录到 `docs/learning-notes.md`？
+
+通过标准：
+
+- 用户知道这段代码背后的底层原理和风险边界。
+- AI 没有把复杂技术判断包装成“直接可用”。
+- 关键学习点被记录，后续可以复盘和迁移。
+
+输出模板：
+
+```text
+核心概念:
+复杂度或资源影响:
+边界条件:
+规模增长风险:
+网络 / 并发 / 缓存 / 权限 / 安全:
+人类必须理解:
+记录位置:
+```
+
+---
+
+## 17. TDD Gate
 
 触发条件：
 
@@ -665,7 +702,7 @@ Green 验证:
 
 ---
 
-## 17. AI-XP Feedback Gate
+## 18. AI-XP Feedback Gate
 
 触发条件：
 
@@ -702,7 +739,7 @@ TDD 状态:
 
 ---
 
-## 18. Documentation Gate
+## 19. Documentation Gate
 
 触发条件：
 
@@ -738,7 +775,7 @@ TDD 状态:
 
 ---
 
-## 19. Review Load Budget Gate
+## 20. Review Load Budget Gate
 
 触发条件：
 
@@ -783,7 +820,62 @@ Review 预算:
 
 ---
 
-## 20. Verification Gate
+## 21. Requirement Discovery / Scope Triage Gate
+
+触发条件：
+
+- 开发过程中不断发现新需求，或用户觉得“越做越发现还缺很多”。
+- 原需求边界开始变宽，当前闭环可能被新想法打断。
+- 新需求看起来有价值，但不确定是否阻塞当前主路径。
+- Bug 修复、UI 调整、数据设计或产品化讨论牵出额外需求。
+
+必须回答：
+
+- 当前唯一主路径是什么？
+- 本轮开发闭环是什么？
+- 新发现的需求是什么？
+- 它属于哪一类：Core Path / Product Foundation / UX Enhancement / Future Monetization / Nice-to-have？
+- 不做它是否阻塞当前主路径？
+- 做它是否会扩大本轮闭环？
+- 本轮处理决定是什么：Do Now / Define Only / Parking Lot / Reject？
+- 如果进入 Parking Lot，未来触发条件是什么？
+
+需求分类：
+
+| 类型 | 含义 | 默认处理 |
+| --- | --- | --- |
+| Core Path | 不做就无法完成当前主路径 | Do Now |
+| Product Foundation | 身份、数据归属、使用记录、权限、成本等产品地基 | Do Now 或 Define Only |
+| UX Enhancement | 让体验更顺，但不阻塞主路径 | Parking Lot |
+| Future Monetization | 套餐、额度、支付、商业化能力 | Define Only 或 Parking Lot |
+| Nice-to-have | 有价值但不影响当前闭环 | Parking Lot 或 Reject |
+
+通过标准：
+
+- 新需求被记录和分流，而不是被 AI 顺手实现。
+- 当前闭环仍然能用一句话说明。
+- Do Now 只包含阻塞主路径或产品地基的必要项。
+- Parking Lot 需求有未来触发条件，避免反复重新讨论。
+- Reject 需求写清拒绝理由，避免隐性回流。
+
+输出模板：
+
+```text
+当前主路径:
+本轮闭环:
+新发现需求:
+需求分类:
+是否阻塞主路径:
+是否扩大本轮闭环:
+处理决定:
+Parking Lot 位置:
+未来触发条件:
+拒绝理由:
+```
+
+---
+
+## 22. Verification Gate
 
 触发条件：
 
@@ -829,7 +921,7 @@ Review 预算:
 
 ---
 
-## 21. Git Management Gate
+## 23. Git Management Gate
 
 触发条件：
 
@@ -876,7 +968,7 @@ Review 级别:
 
 ---
 
-## 22. Productization Boundary Gate
+## 24. Productization Boundary Gate
 
 触发条件：
 
@@ -927,7 +1019,7 @@ BYOK / 支付:
 
 ---
 
-## 23. Production Readiness Gate
+## 25. Production Readiness Gate
 
 触发条件：
 
@@ -965,7 +1057,7 @@ BYOK / 支付:
 
 ---
 
-## 24. Release / Rollback Gate
+## 26. Release / Rollback Gate
 
 触发条件：
 

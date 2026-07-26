@@ -2,7 +2,7 @@
 
 用于给项目初始化一套 AI 开发协议文件，方便 Codex、OpenCode、Claude Code、Gemini CLI 等工具读取统一的项目规则和上下文文档。
 
-这套协议的核心是：先用 IPSI-G 防止 AI 在产品未定义时过早写代码；新开发页面先用 UI Draft First 确认界面方向；涉及高风险判断时用 Human Judgment Gate 区分事实、推测、反例和人的判断；多轮对话或阶段切换时用 Context Management Gate 防止上下文污染；把决策、实现、验证或发布交给 AI 前用 Trust Calibration Gate 明确授权边界；review AI 生成 diff 前用 Review Load Budget Gate 控制审查负担；涉及分支、提交、PR、合并或回滚时用 Git 管理规范保护历史和用户改动；个人工具、原型或内部工具准备给别人用、未来收费或产生 AI/API 成本时，用 Productization Boundary Gate 提前检查用户身份、数据归属、使用记录、权益额度和成本控制；原型进入真实用户或生产前用 Production Readiness Gate 检查上线条件；如果涉及界面、数据、安全、性能、AI 行为、依赖、成本或兼容性，再用对应 Gate 明确边界、指标和验证方式；实现前用 TDD 定义可验证行为；开发中用 AI-XP 短反馈循环约束 AI 的快速执行；交付前用 Documentation、Verification、Release / Rollback Gate 防止代码、文档、验证和上线脱节。
+这套协议的核心是：先用 IPSI-G 防止 AI 在产品未定义时过早写代码；新开发页面先用 UI Draft First 确认界面方向；涉及高风险判断时用 Human Judgment Gate 区分事实、推测、反例和人的判断；多轮对话或阶段切换时用 Context Management Gate 防止上下文污染；把决策、实现、验证或发布交给 AI 前用 Trust Calibration Gate 明确授权边界；review AI 生成 diff 前用 Review Load Budget Gate 控制审查负担；开发中发现新需求或范围变宽时，用 Requirement Discovery / Scope Triage Gate 区分主路径缺口、产品地基、体验增强、未来商业化和可选项；涉及算法复杂度、性能、并发、网络、安全、权限、跨模块 Bug 或架构取舍时，用 CS Core / Mental Model Gate 明确人类必须理解的计算机科学核心概念；涉及分支、提交、PR、合并或回滚时用 Git 管理规范保护历史和用户改动；个人工具、原型或内部工具准备给别人用、未来收费或产生 AI/API 成本时，用 Productization Boundary Gate 提前检查用户身份、数据归属、使用记录、权益额度和成本控制；原型进入真实用户或生产前用 Production Readiness Gate 检查上线条件；如果涉及界面、数据、安全、性能、AI 行为、依赖、成本或兼容性，再用对应 Gate 明确边界、指标和验证方式；实现前用 TDD 定义可验证行为；开发中用 AI-XP 短反馈循环约束 AI 的快速执行；交付前用 Documentation、Verification、Release / Rollback Gate 防止代码、文档、验证和上线脱节。
 
 ## 会创建什么
 
@@ -12,7 +12,7 @@
 - `CLAUDE.md`：Claude Code 使用的极薄入口，导入 `AGENTS.md` 和 `PROJECT.md`
 - `GEMINI.md`：Gemini CLI fallback 说明
 - `.gemini/settings.json`：让 Gemini 默认读取 `AGENTS.md`
-- `PROJECT.md`：产品规划、需求说明、IPSI-G Gate 状态、UI Draft First、UI/UX 策略、数据策略、安全策略、性能策略、AI 评估、Human Judgment、上下文管理、AI 信任校准、review 预算、产品化边界、生产就绪、依赖策略、成本策略、兼容策略、TDD 策略、AI-XP 短反馈记录、文档策略、验证记录、发布回滚和需求变化记录
+- `PROJECT.md`：产品规划、需求说明、IPSI-G Gate 状态、UI Draft First、UI/UX 策略、数据策略、安全策略、性能策略、AI 评估、Human Judgment、上下文管理、AI 信任校准、review 预算、需求发现与范围分流、CS 核心心智模型、产品化边界、生产就绪、依赖策略、成本策略、兼容策略、TDD 策略、AI-XP 短反馈记录、文档策略、验证记录、发布回滚和需求变化记录
 - `docs/gates.md`：详细 Gate 清单，只在对应 Gate 被激活时读取
 - `docs/project-map.md`：项目地图
 - `docs/architecture.md`：架构说明
@@ -91,7 +91,7 @@ ai-init .
 3. 打开生成的 `PROJECT.md`，按 IPSI-G 补充想法、产品、系统和 Gate 状态。
 4. 打开生成的 `AGENTS.md`，补充少量项目专属常驻规则。
 5. 让 AI 先读取 `PROJECT.md` 和 `AGENTS.md`，判断任务等级和 Gate 激活清单。
-6. 如果涉及 UI、数据、安全、性能、AI、Human Judgment、上下文管理、AI 授权、依赖、成本、兼容、TDD、AI-XP、review、Git 管理、产品化边界、文档、验证、生产就绪或发布回滚，只读取 `docs/gates.md` 中对应 Gate 章节。
+6. 如果涉及 UI、数据、安全、性能、AI、Human Judgment、上下文管理、AI 授权、依赖、成本、兼容、CS 核心概念、TDD、AI-XP、review、需求发现与范围分流、Git 管理、产品化边界、文档、验证、生产就绪或发布回滚，只读取 `docs/gates.md` 中对应 Gate 章节。
 7. 新产品、新功能或新页面涉及 UI 时，先通过 Idea / Product / System Gate，再执行 UI Draft First。
 8. UI Draft First 输出线框图、低保真 UI 图、ASCII 布局、Mermaid 流程或可预览原型，确认方向后再开发。
 9. 多轮对话、阶段切换、AI 反复犯错或上下文变乱时，执行 Context Management Gate。
@@ -99,11 +99,13 @@ ai-init .
 11. 进入实现前，要求 AI 说明本次闭环、修改文件、验证方式和回退方式。
 12. Review AI 生成 diff 前，先选择 Light / Targeted / Full Review，明确必看文件和风险焦点。
 13. 验证前先选择 Light / Targeted / Full Verification，说明为什么这个强度与风险匹配。
-14. 涉及分支、提交、PR、合并或回滚时，读取 `docs/git-workflow.md`。
-15. 个人工具、原型或内部工具准备给别人用、未来收费或产生 AI/API 成本时，执行 Productization Boundary Gate。
-16. 原型进入真实用户、生产、团队协作或长期维护前，执行 Production Readiness Gate。
-17. 验证通过后，如果需要小重构，只允许做一次能改善重复、命名、数据流或可测试性的重构，并再次运行同一验证。
-18. 交付前，要求 AI 明确验证预算、验证结果、未验证项、学习点和剩余风险。
+14. 涉及算法复杂度、性能、并发、网络、安全、权限、跨模块 Bug 或架构取舍时，执行 CS Core / Mental Model Gate。
+15. 开发中发现新需求或范围变宽时，执行 Requirement Discovery / Scope Triage Gate，决定 Do Now / Define Only / Parking Lot / Reject。
+16. 涉及分支、提交、PR、合并或回滚时，读取 `docs/git-workflow.md`。
+17. 个人工具、原型或内部工具准备给别人用、未来收费或产生 AI/API 成本时，执行 Productization Boundary Gate。
+18. 原型进入真实用户、生产、团队协作或长期维护前，执行 Production Readiness Gate。
+19. 验证通过后，如果需要小重构，只允许做一次能改善重复、命名、数据流或可测试性的重构，并再次运行同一验证。
+20. 交付前，要求 AI 明确验证预算、验证结果、未验证项、学习点和剩余风险。
 
 ## Productization Boundary Gate
 
@@ -357,9 +359,11 @@ Performance Gate 默认参考：
 - Dependency Gate：Twelve-Factor App、OpenSSF Scorecard、npm package.json、Python Packaging
 - Cost Gate：FinOps Framework、FinOps Usage Optimization、OpenAI API rate limit guidance
 - Compatibility Gate：MDN Baseline、npm engines / os / cpu、Python Requires-Python
+- CS Core / Mental Model Gate：算法复杂度、数据结构、性能、并发、网络、缓存、安全、权限、跨模块 Bug、架构取舍
 - AI-XP Feedback Gate：Extreme Programming 的短反馈循环、Human-AI Pair Programming、TDD Red / Green / Refactor
 - Documentation Gate：Diataxis、Google Developer Documentation Style Guide、NLPM 规则
 - Review Load Budget Gate：review 预算、必看文件、关键调用链、二次 review 条件
+- Requirement Discovery / Scope Triage Gate：Core Path、Product Foundation、UX Enhancement、Future Monetization、Nice-to-have、Parking Lot
 - Git Management Gate：trunk-based workflow、Conventional Commits、PR review、squash merge、revert rollback、AI 协作边界
 - Productization Boundary Gate：用户身份、数据归属、使用记录、权益额度、AI/API 成本控制、BYOK、手动 Pro
 - Verification Gate：Verification Budget、Lint、Type Check、Unit Test、Integration / E2E Test、Build、Manual Verification

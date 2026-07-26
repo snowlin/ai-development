@@ -777,6 +777,38 @@ merge_project_doc() {
 
 待补充。
 
+## CS Core / Mental Model
+
+### 是否涉及计算机科学核心概念
+
+待补充。
+
+### 核心概念
+
+| 概念 | 为什么相关 | 需要理解到什么程度 |
+| --- | --- | --- |
+| 待补充 | 待补充 | 待补充 |
+
+### 复杂度或资源影响
+
+待补充。
+
+### 规模增长风险
+
+待补充。
+
+### 网络 / 并发 / 缓存 / 权限 / 安全
+
+待补充。
+
+### 人类必须理解
+
+- 待补充。
+
+### 记录到 learning-notes
+
+待补充。
+
 ## Implementation
 
 ### 第一阶段 MVP 闭环
@@ -860,6 +892,30 @@ merge_project_doc() {
 | 关键调用链 | 待补充 |
 | 风险点 | 待补充 |
 | 是否需要二次 review | 待补充 |
+
+## Requirement Discovery / Scope Triage
+
+### 是否发现新增需求或范围扩大
+
+待补充。
+
+### 当前主路径
+
+待补充。
+
+### 本轮闭环
+
+待补充。
+
+### 新发现需求分流
+
+| 需求 | 分类 | 是否阻塞主路径 | 处理决定 | 未来触发条件 |
+| --- | --- | --- | --- | --- |
+| 待补充 | Core Path / Product Foundation / UX Enhancement / Future Monetization / Nice-to-have | Yes / No / 待补充 | Do Now / Define Only / Parking Lot / Reject / 待补充 | 待补充 |
+
+### Parking Lot 位置
+
+待补充。
 
 ## Productization Boundary
 
@@ -994,10 +1050,12 @@ Prototype / Internal Tool / Beta / Production / 待补充
 | Dependency | 未确认 | 待补充 |
 | Cost | 未确认 | 待补充 |
 | Compatibility | 未确认 | 待补充 |
+| CS Core / Mental Model | 未确认 | 待补充 |
 | TDD | 未确认 | 待补充 |
 | AI-XP Feedback | 未确认 | 待补充 |
 | Documentation | 未确认 | 待补充 |
 | Review Load Budget | 未确认 | 待补充 |
+| Requirement Discovery / Scope Triage | 未确认 | 待补充 |
 | Git Management | 未确认 | 待补充 |
 | Productization Boundary | 未确认 | 待补充 |
 | Verification | 激活 | 默认激活，用于交付前验证 |
@@ -1019,10 +1077,12 @@ Prototype / Internal Tool / Beta / Production / 待补充
 | Dependency Gate | 未确认 | 待补充 |
 | Cost Gate | 未确认 | 待补充 |
 | Compatibility Gate | 未确认 | 待补充 |
+| CS Core / Mental Model Gate | 未确认 | 待补充 |
 | TDD Gate | 未确认 | 待补充 |
 | AI-XP Feedback Gate | 未确认 | 待补充 |
 | Documentation Gate | 未确认 | 待补充 |
 | Review Load Budget Gate | 未确认 | 待补充 |
+| Requirement Discovery / Scope Triage Gate | 未确认 | 待补充 |
 | Git Management Gate | 未确认 | 待补充 |
 | Productization Boundary Gate | 未确认 | 待补充 |
 | Verification Gate | 未确认 | 待补充 |
@@ -1132,13 +1192,15 @@ echo "6. UI 草图确认后，再进入实现"
 echo "7. 涉及高风险判断时，执行 Human Judgment Gate，区分事实、推测、反例和人的判断"
 echo "8. 多轮对话、阶段切换或上下文混乱时，执行 Context Management Gate"
 echo "9. 将决策、实现、验证或发布交给 AI 前，执行 Trust Calibration Gate"
-echo "10. 涉及 UI、数据、安全、性能、AI、依赖、成本、兼容、AI-XP、Git 管理或产品化边界时，只读取 docs/gates.md 中对应 Gate"
+echo "10. 涉及 UI、数据、安全、性能、AI、依赖、成本、兼容、CS 核心概念、AI-XP、需求发现、Git 管理或产品化边界时，只读取 docs/gates.md 中对应 Gate"
 echo "11. 进入实现前，说明 TDD 状态和验证方式"
 echo "12. Review AI 生成 diff 前，选择 Light / Targeted / Full Review"
 echo "13. 验证前，先选择 Light / Targeted / Full Verification"
-echo "14. 涉及分支、提交、PR、合并或回滚时，读取 docs/git-workflow.md"
-echo "15. 个人工具、原型或内部工具准备给别人用、未来收费或产生 AI/API 成本时，执行 Productization Boundary Gate"
-echo "16. 原型进入真实用户、生产、团队协作或长期维护前，执行 Production Readiness Gate"
-echo "17. 验证通过后，如需小重构，只做一次并再次验证"
-echo "18. 交付前，完成文档、验证、发布和回滚检查"
+echo "14. 涉及算法复杂度、性能、并发、网络、安全、权限、跨模块 Bug 或架构取舍时，执行 CS Core / Mental Model Gate"
+echo "15. 开发中发现新需求或范围变宽时，执行 Requirement Discovery / Scope Triage Gate"
+echo "16. 涉及分支、提交、PR、合并或回滚时，读取 docs/git-workflow.md"
+echo "17. 个人工具、原型或内部工具准备给别人用、未来收费或产生 AI/API 成本时，执行 Productization Boundary Gate"
+echo "18. 原型进入真实用户、生产、团队协作或长期维护前，执行 Production Readiness Gate"
+echo "19. 验证通过后，如需小重构，只做一次并再次验证"
+echo "20. 交付前，完成文档、验证、发布和回滚检查"
 echo ""
