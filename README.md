@@ -2,7 +2,7 @@
 
 用于给项目初始化一套 AI 开发协议文件，方便 Codex、OpenCode、Claude Code、Gemini CLI 等工具读取统一的项目规则和上下文文档。
 
-这套协议的核心是：先用 IPSI-G 防止 AI 在产品未定义时过早写代码；新开发页面先用 UI Draft First 确认界面方向；涉及高风险判断时用 Human Judgment Gate 区分事实、推测、反例和人的判断；多轮对话或阶段切换时用 Context Management Gate 防止上下文污染；把决策、实现、验证或发布交给 AI 前用 Trust Calibration Gate 明确授权边界；review AI 生成 diff 前用 Review Load Budget Gate 控制审查负担；开发中发现新需求或范围变宽时，用 Requirement Discovery / Scope Triage Gate 区分主路径缺口、产品地基、体验增强、未来商业化和可选项；涉及算法复杂度、性能、并发、网络、安全、权限、跨模块 Bug 或架构取舍时，用 CS Core / Mental Model Gate 明确人类必须理解的计算机科学核心概念；涉及分支、提交、PR、合并或回滚时用 Git 管理规范保护历史和用户改动；个人工具、原型或内部工具准备给别人用、未来收费或产生 AI/API 成本时，用 Productization Boundary Gate 提前检查用户身份、数据归属、使用记录、权益额度和成本控制；原型进入真实用户或生产前用 Production Readiness Gate 检查上线条件；如果涉及界面、数据、安全、性能、AI 行为、依赖、成本或兼容性，再用对应 Gate 明确边界、指标和验证方式；实现前用 TDD 定义可验证行为；开发中用 AI-XP 短反馈循环约束 AI 的快速执行；交付前用 Documentation、Verification、Release / Rollback Gate 防止代码、文档、验证和上线脱节。
+这套协议的核心是：先用 IPSI-G 防止 AI 在产品未定义时过早写代码；新产品、新功能或新页面进入实现前，用 System Skeleton Gate 检查用户角色、后台管理、数据归属、权限边界、状态流转、异常处理和 MVP 暂不实现，避免开发到一半才发现缺用户体系或后台；新开发页面先用 UI Draft First 确认界面方向；涉及高风险判断时用 Human Judgment Gate 区分事实、推测、反例和人的判断；多轮对话或阶段切换时用 Context Management Gate 防止上下文污染；把决策、实现、验证或发布交给 AI 前用 Trust Calibration Gate 明确授权边界；review AI 生成 diff 前用 Review Load Budget Gate 控制审查负担；开发中发现新需求或范围变宽时，用 Requirement Discovery / Scope Triage Gate 区分主路径缺口、产品地基、体验增强、未来商业化和可选项；涉及算法复杂度、性能、并发、网络、安全、权限、跨模块 Bug 或架构取舍时，用 CS Core / Mental Model Gate 明确人类必须理解的计算机科学核心概念；涉及分支、提交、PR、合并或回滚时用 Git 管理规范保护历史和用户改动；个人工具、原型或内部工具准备给别人用、未来收费或产生 AI/API 成本时，用 Productization Boundary Gate 提前检查用户身份、数据归属、使用记录、权益额度和成本控制；原型进入真实用户或生产前用 Production Readiness Gate 检查上线条件；如果涉及界面、数据、安全、性能、AI 行为、依赖、成本或兼容性，再用对应 Gate 明确边界、指标和验证方式；实现前用 TDD 定义可验证行为；开发中用 AI-XP 短反馈循环约束 AI 的快速执行；交付前用 Documentation、Verification、Release / Rollback Gate 防止代码、文档、验证和上线脱节。
 
 ## 会创建什么
 
@@ -12,8 +12,11 @@
 - `CLAUDE.md`：Claude Code 使用的极薄入口，导入 `AGENTS.md` 和 `PROJECT.md`
 - `GEMINI.md`：Gemini CLI fallback 说明
 - `.gemini/settings.json`：让 Gemini 默认读取 `AGENTS.md`
-- `PROJECT.md`：产品规划、需求说明、IPSI-G Gate 状态、UI Draft First、UI/UX 策略、数据策略、安全策略、性能策略、AI 评估、Human Judgment、上下文管理、AI 信任校准、review 预算、需求发现与范围分流、CS 核心心智模型、产品化边界、生产就绪、依赖策略、成本策略、兼容策略、TDD 策略、AI-XP 短反馈记录、文档策略、验证记录、发布回滚和需求变化记录
+- `PROJECT.md`：产品规划、需求说明、IPSI-G Gate 状态、System Skeleton Gate、UI Draft First、UI/UX 策略、数据策略、安全策略、性能策略、AI 评估、Human Judgment、上下文管理、AI 信任校准、review 预算、需求发现与范围分流、CS 核心心智模型、产品化边界、生产就绪、依赖策略、成本策略、兼容策略、TDD 策略、AI-XP 短反馈记录、文档策略、验证记录、发布回滚和需求变化记录
 - `docs/gates.md`：详细 Gate 清单，只在对应 Gate 被激活时读取
+- `templates/product-selection.md`：可选 Product Selection Gate 完整方法论，不会复制到每个项目
+- `templates/product-selection-trigger.md`：跨 AI 工具复用的轻量常驻触发规则
+- `docs/product-selection-integration.md`：Codex、Claude、Cursor、Gemini、ChatGPT 等工具的接入原则
 - `docs/project-map.md`：项目地图
 - `docs/architecture.md`：架构说明
 - `docs/data-flow.md`：数据流说明
@@ -27,7 +30,7 @@
 
 如果目标文件已经存在，脚本会按文件类型处理：
 
-- 协议入口文件：`AGENTS.md`、`CLAUDE.md`、`GEMINI.md`、`docs/gates.md` 会升级为当前最新模板，旧文件会备份为 `*.ai-development-backup.YYYYMMDDHHMMSS`。
+- 协议入口文件：`AGENTS.md`、`CLAUDE.md`、`GEMINI.md`、`docs/gates.md` 会升级为当前最新模板；只有最终内容确实变化时，旧文件才会备份到 `.ai-development-backups/`。
 - 项目资料文件：`PROJECT.md`、`docs/project-map.md`、`docs/architecture.md`、`docs/data-flow.md`、`docs/decision-log.md`、`docs/learning-notes.md`、`docs/git-workflow.md` 和 `prompts/` 会保留原内容，并更新 `ai-development` 标记块。
 
 如果你需要在协议入口文件里保留项目专属规则，请放在本地补充标记中：
@@ -41,6 +44,27 @@
 再次执行 `ai-init` 时，本地补充会被保留到新版协议末尾。
 
 ## 直接使用
+
+### 项目创建前：先做 Product Selection
+
+如果还没有项目目录，但已经在讨论新产品、新 SaaS、新 AI 功能或重大方向，不需要先运行 `ai-init`。直接让 AI 读取中央模板：
+
+```text
+请读取 /Users/lingxr/Documents/myproduct/ai-development/templates/product-selection.md，
+对下面的想法执行 Product Selection Gate。不要写代码；请输出事实、假设、未知、
+最大未知、最便宜的决定性测试，以及 Continue / Define Only / Parking Lot / Reject 决策。
+```
+
+把结果保存在项目外的想法记录中，例如 `~/product-ideas/<idea-name>.md` 或一个独立笔记，而不是复制到未来项目。只有决定继续后，再执行 `ai-init <project-dir>`，并将 Product Selection 的结论摘要填入新项目的 `PROJECT.md` 的 Idea / Product 部分。
+
+这样可以区分两个阶段：
+
+- 项目创建前：中央模板负责选择、验证和是否投入的判断。
+- 项目创建后：项目级 `PROJECT.md` 记录已确认的结论，`docs/gates.md` 只保留按需触发规则。
+
+### 跨 AI 工具自动触发
+
+为了避免忘记 Product Selection，不要只依赖手动输入文件名。将 `templates/product-selection-trigger.md` 放入目标工具的全局 Instructions、Rules 或 Skill 中；完整的 `templates/product-selection.md` 仍然只保留一份，触发后按需读取。具体适配方式见 `docs/product-selection-integration.md`。
 
 先给脚本增加执行权限：
 
@@ -91,21 +115,23 @@ ai-init .
 3. 打开生成的 `PROJECT.md`，按 IPSI-G 补充想法、产品、系统和 Gate 状态。
 4. 打开生成的 `AGENTS.md`，补充少量项目专属常驻规则。
 5. 让 AI 先读取 `PROJECT.md` 和 `AGENTS.md`，判断任务等级和 Gate 激活清单。
-6. 如果涉及 UI、数据、安全、性能、AI、Human Judgment、上下文管理、AI 授权、依赖、成本、兼容、CS 核心概念、TDD、AI-XP、review、需求发现与范围分流、Git 管理、产品化边界、文档、验证、生产就绪或发布回滚，只读取 `docs/gates.md` 中对应 Gate 章节。
-7. 新产品、新功能或新页面涉及 UI 时，先通过 Idea / Product / System Gate，再执行 UI Draft First。
-8. UI Draft First 输出线框图、低保真 UI 图、ASCII 布局、Mermaid 流程或可预览原型，确认方向后再开发。
-9. 多轮对话、阶段切换、AI 反复犯错或上下文变乱时，执行 Context Management Gate。
-10. 将决策、实现、验证、发布或高风险操作交给 AI 前，执行 Trust Calibration Gate。
-11. 进入实现前，要求 AI 说明本次闭环、修改文件、验证方式和回退方式。
-12. Review AI 生成 diff 前，先选择 Light / Targeted / Full Review，明确必看文件和风险焦点。
-13. 验证前先选择 Light / Targeted / Full Verification，说明为什么这个强度与风险匹配。
-14. 涉及算法复杂度、性能、并发、网络、安全、权限、跨模块 Bug 或架构取舍时，执行 CS Core / Mental Model Gate。
-15. 开发中发现新需求或范围变宽时，执行 Requirement Discovery / Scope Triage Gate，决定 Do Now / Define Only / Parking Lot / Reject。
-16. 涉及分支、提交、PR、合并或回滚时，读取 `docs/git-workflow.md`。
-17. 个人工具、原型或内部工具准备给别人用、未来收费或产生 AI/API 成本时，执行 Productization Boundary Gate。
-18. 原型进入真实用户、生产、团队协作或长期维护前，执行 Production Readiness Gate。
-19. 验证通过后，如果需要小重构，只允许做一次能改善重复、命名、数据流或可测试性的重构，并再次运行同一验证。
-20. 交付前，要求 AI 明确验证预算、验证结果、未验证项、学习点和剩余风险。
+6. 如果涉及系统骨架、UI、数据、安全、性能、AI、Human Judgment、上下文管理、AI 授权、依赖、成本、兼容、CS 核心概念、TDD、AI-XP、review、需求发现与范围分流、Git 管理、产品化边界、文档、验证、生产就绪或发布回滚，只读取 `docs/gates.md` 中对应 Gate 章节。
+7. 新产品、新 SaaS、新 AI 功能或重大方向选择时，激活 Product Selection Gate；按需读取 ai-development 仓库中的 `templates/product-selection.md`，不要把完整模板复制到项目中。
+8. 新产品、新功能或新页面涉及 UI 时，先通过 Idea / Product / System Gate，再执行 UI Draft First。
+9. UI Draft First 输出线框图、低保真 UI 图、ASCII 布局、Mermaid 流程或可预览原型，确认方向后再开发。
+10. 多轮对话、阶段切换、AI 反复犯错或上下文变乱时，执行 Context Management Gate。
+11. 将决策、实现、验证、发布或高风险操作交给 AI 前，执行 Trust Calibration Gate。
+12. 新产品、新功能或新页面进入实现前，要求 AI 执行 System Skeleton Gate，先检查用户角色、后台管理、数据归属、权限、状态和异常处理。
+13. 进入实现前，要求 AI 说明本次闭环、修改文件、验证方式和回退方式。
+14. Review AI 生成 diff 前，先选择 Light / Targeted / Full Review，明确必看文件和风险焦点。
+15. 验证前先选择 Light / Targeted / Full Verification，说明为什么这个强度与风险匹配。
+16. 涉及算法复杂度、性能、并发、网络、安全、权限、跨模块 Bug 或架构取舍时，执行 CS Core / Mental Model Gate。
+17. 开发中发现新需求或范围变宽时，执行 Requirement Discovery / Scope Triage Gate，决定 Do Now / Define Only / Parking Lot / Reject。
+18. 涉及分支、提交、PR、合并或回滚时，读取 `docs/git-workflow.md`。
+19. 个人工具、原型或内部工具准备给别人用、未来收费或产生 AI/API 成本时，执行 Productization Boundary Gate。
+20. 原型进入真实用户、生产、团队协作或长期维护前，执行 Production Readiness Gate。
+21. 验证通过后，如果需要小重构，只允许做一次能改善重复、命名、数据流或可测试性的重构，并再次运行同一验证。
+22. 交付前，要求 AI 明确验证预算、验证结果、未验证项、学习点和剩余风险。
 
 ## Productization Boundary Gate
 
@@ -218,7 +244,7 @@ AI 可以提供模式识别、方案生成、总结和推理辅助，但 AI 的�
 - 必须指出必看文件、可看摘要文件、关键调用链和风险点。
 - review 负担要与改动风险匹配。
 
-## Production Readiness Gate
+## Production Readiness Gate & 上线前 5 道必过关卡
 
 当原型、内部工具或实验功能准备进入真实用户、生产环境、团队协作或长期维护时，执行 Production Readiness Gate。
 
@@ -227,11 +253,27 @@ AI 可以提供模式识别、方案生成、总结和推理辅助，但 AI 的�
 | Prototype | 可以不完整，但必须标记为原型，不能伪装生产能力 |
 | Internal Tool | 可给自己或小范围使用，需要基本错误处理和数据保护 |
 | Beta | 可给真实用户试用，需要监控、反馈入口和回滚方式 |
-| Production | 面向正式使用，需要 owner、日志、告警、安全、备份和回滚 |
+| Production | 面向正式使用，需要 owner、日志、告警、安全、备份和回滚，且必须核对上线前 5 道必过关卡 |
+
+### AI 产品上线前必过 5 道关卡 Check List (阶段化防护)
+
+1. **数据库变更优先于代码部署 (Data Gate & Release Gate)**：
+   - *新项目冷启动*：直接跑全量版本化 Migration。
+   - *存量项目迭代*：Migration 必须优先上线；新代码强制向前兼容（`NULLABLE` / `DEFAULT` 与 Fallback 避免 500）；涉及删/改列必须采用 `Expand & Contract`（两阶段扩展与收缩双写）。
+2. **为任务重试配备“错误鉴别器” (Performance Gate & System Gate)**：
+   - *可重试*：网络超时、偶发 5xx 等，配合 Exponential Backoff（指数退避）。
+   - *不可重试*：4xx 客户端错误、SQL 字段不存在等确定性失败，**立即终止任务并报警**。
+3. **计费 API 任务实现幂等性与断点续传 (Cost Gate & Productization Gate)**：
+   - 在数据库记录 `task_id` + `status`，重试时自动跳过已完成的高成本 LLM/付费 API 调用。
+4. **彻底隔离环境 API Key 并设置预算硬上限 (Security Gate & Cost Gate)**：
+   - 生产与测试环境 Key 彻底隔离；后台配置 **Hard Limit（硬上限强熔断）** 防死循环刷爆卡，配置 **Soft Limit（软上限预警）**。
+5. **上线前进行“坏路径”（Bad Path）场景测试 (Verification Gate & Production Gate)**：
+   - 显式测试断网/DB断连、第三方 500、并发重复触发、额度耗尽，验证系统优雅降级而非死循环放大费用。
 
 固定检查：
 
 - 是否涉及真实用户、真实账号、真实数据或真实费用。
+- 是否已核对“上线前必过的 5 道关卡 Check List”。
 - 是否有监控、日志、错误处理、备份和回滚方式。
 - 是否有维护 owner 和停止条件。
 - 哪些生产缺口还没有补齐。
@@ -366,6 +408,7 @@ Performance Gate 默认参考：
 - Requirement Discovery / Scope Triage Gate：Core Path、Product Foundation、UX Enhancement、Future Monetization、Nice-to-have、Parking Lot
 - Git Management Gate：trunk-based workflow、Conventional Commits、PR review、squash merge、revert rollback、AI 协作边界
 - Productization Boundary Gate：用户身份、数据归属、使用记录、权益额度、AI/API 成本控制、BYOK、手动 Pro
+- System Skeleton Gate：用户角色、后台管理、数据归属、权限边界、状态流转、异常处理、MVP 暂不实现
 - Verification Gate：Verification Budget、Lint、Type Check、Unit Test、Integration / E2E Test、Build、Manual Verification
 - Production Readiness Gate：生产就绪清单、Observability、Error Handling、Backup、Rollback、Owner
 - Release / Rollback Gate：Google SRE Release Engineering、Google SRE rollback practice、Twelve-Factor Build / Release / Run、DORA metrics

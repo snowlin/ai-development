@@ -48,7 +48,7 @@ if [ ! -w "$PROJECT_DIR" ]; then
   exit 1
 fi
 
-for REQUIRED_TEMPLATE in AGENTS.md CLAUDE.md GEMINI.md docs/gates.md docs/git-workflow.md .gemini/settings.json; do
+for REQUIRED_TEMPLATE in AGENTS.md CLAUDE.md GEMINI.md gates.md git-workflow.md .gemini/settings.json; do
   if [ ! -f "$TEMPLATE_DIR/$REQUIRED_TEMPLATE" ]; then
     echo "错误：缺少模板文件"
     echo "$TEMPLATE_DIR/$REQUIRED_TEMPLATE"
@@ -57,6 +57,8 @@ for REQUIRED_TEMPLATE in AGENTS.md CLAUDE.md GEMINI.md docs/gates.md docs/git-wo
 done
 
 mkdir -p "$PROJECT_DIR/docs" "$PROJECT_DIR/prompts" "$PROJECT_DIR/.gemini"
+
+BACKUP_DIR="$PROJECT_DIR/.ai-development-backups"
 
 merge_from_file() {
   local SOURCE="$1"
@@ -119,6 +121,8 @@ upgrade_protocol_file() {
   local TMP_FILE
   local LOCAL_FILE
   local BACKUP_FILE
+  local BACKUP_BASENAME
+  local BACKUP_SUFFIX
 
   if [ ! -e "$TARGET" ]; then
     cp "$SOURCE" "$TARGET"
@@ -148,7 +152,21 @@ upgrade_protocol_file() {
       } >> "$TMP_FILE"
     fi
 
-    BACKUP_FILE="$TARGET.ai-development-backup.$(date +%Y%m%d%H%M%S)"
+    if cmp -s "$TMP_FILE" "$TARGET"; then
+      rm -f "$TMP_FILE" "$LOCAL_FILE"
+      echo "协议文件内容未变化：$TARGET"
+      return 0
+    fi
+
+    mkdir -p "$BACKUP_DIR"
+    BACKUP_BASENAME="${TARGET:t}.ai-development-backup.$(date +%Y%m%d%H%M%S)"
+    BACKUP_FILE="$BACKUP_DIR/$BACKUP_BASENAME"
+    BACKUP_SUFFIX=1
+    while [ -e "$BACKUP_FILE" ]; do
+      BACKUP_FILE="$BACKUP_DIR/$BACKUP_BASENAME.$BACKUP_SUFFIX"
+      BACKUP_SUFFIX=$((BACKUP_SUFFIX + 1))
+    done
+
     cp "$TARGET" "$BACKUP_FILE"
     mv "$TMP_FILE" "$TARGET"
     rm -f "$LOCAL_FILE"
@@ -247,12 +265,12 @@ merge_gemini_settings \
   "$PROJECT_DIR/.gemini/settings.json"
 
 upgrade_protocol_file \
-  "$TEMPLATE_DIR/docs/gates.md" \
+  "$TEMPLATE_DIR/gates.md" \
   "$PROJECT_DIR/docs/gates.md" \
   "docs/gates.md"
 
 merge_from_file \
-  "$TEMPLATE_DIR/docs/git-workflow.md" \
+  "$TEMPLATE_DIR/git-workflow.md" \
   "$PROJECT_DIR/docs/git-workflow.md" \
   "docs/git-workflow.md"
 
@@ -330,6 +348,72 @@ merge_project_doc() {
 ### 数据流
 
 待补充。
+
+## System Skeleton
+
+### 是否需要系统骨架检查
+
+待补充。
+
+### 用户角色
+
+| 角色 | 核心动作 | 是否本轮支持 |
+| --- | --- | --- |
+| 游客 | 待补充 | 待补充 |
+| 注册用户 | 待补充 | 待补充 |
+| 付费用户 | 待补充 | 待补充 |
+| 管理员 | 待补充 | 待补充 |
+| 运营 / 审核员 | 待补充 | 待补充 |
+
+### 后台管理
+
+| 管理对象 | 最小后台能力 | 是否本轮实现 | 暂不实现依据 |
+| --- | --- | --- | --- |
+| 用户 | 列表 / 详情 / 禁用 / 权限调整 | 待补充 | 待补充 |
+| 内容 / 数据 | 列表 / 详情 / 编辑 / 删除 / 审核 | 待补充 | 待补充 |
+| 订单 / 权益 / 额度 | 查看 / 调整 / 退款 / 超额处理 | 待补充 | 待补充 |
+| 配置 / 日志 | 配置开关 / 操作日志 / 错误追踪 | 待补充 | 待补充 |
+
+### 数据归属
+
+| 数据对象 | 归属字段 | 归属说明 |
+| --- | --- | --- |
+| 待补充 | owner_id / user_id / team_id / 默认 owner / 待补充 | 待补充 |
+
+### 权限边界
+
+| 动作 | 谁可以做 | 谁不可以做 | 验证方式 |
+| --- | --- | --- | --- |
+| 查看 | 待补充 | 待补充 | 待补充 |
+| 创建 | 待补充 | 待补充 | 待补充 |
+| 修改 | 待补充 | 待补充 | 待补充 |
+| 删除 | 待补充 | 待补充 | 待补充 |
+| 审核 / 发布 | 待补充 | 待补充 | 待补充 |
+| 导出 | 待补充 | 待补充 | 待补充 |
+
+### 状态流转
+
+| 对象 | 状态 | 触发动作 | 操作者 |
+| --- | --- | --- | --- |
+| 待补充 | 草稿 / 已提交 / 处理中 / 成功 / 失败 / 已发布 / 已归档 / 待补充 | 待补充 | 待补充 |
+
+### 异常处理
+
+| 异常 | 用户看到什么 | 后台如何处理 | 是否需要日志 |
+| --- | --- | --- | --- |
+| 失败 | 待补充 | 待补充 | 待补充 |
+| 违规 | 待补充 | 待补充 | 待补充 |
+| 重复 | 待补充 | 待补充 | 待补充 |
+| 超额 | 待补充 | 待补充 | 待补充 |
+| 误删 / 投诉 / 退款 | 待补充 | 待补充 | 待补充 |
+
+### MVP 暂不实现
+
+| 暂不实现项 | 原因 | 最小预留 | 未来触发条件 |
+| --- | --- | --- | --- |
+| 用户体系 | 待补充 | current_user / owner_id / user_id / 待补充 | 待补充 |
+| 后台管理 | 待补充 | 管理入口 / 操作日志 / 配置表 / 待补充 | 待补充 |
+| 权限细分 | 待补充 | role / permission check / 待补充 | 待补充 |
 
 ## Data
 
@@ -985,6 +1069,7 @@ Prototype / Internal Tool / Beta / Production / 待补充
 | --- | --- | --- |
 | 是否涉及真实用户 | 待补充 | 待补充 |
 | 是否涉及敏感数据 | 待补充 | 待补充 |
+| 上线 5 道必过关卡 (DB/重试/幂等/Key隔离/坏路径) | 未核对 | 包含：DB变更优先、重试错误鉴别、计费API幂等断点续传、API Key隔离与预算硬上限、Bad Path坏路径测试 (见 docs/gates.md#27) |
 | 生产缺口 | 待补充 | 待补充 |
 | 监控和日志 | 待补充 | 待补充 |
 | 回滚方式 | 待补充 | 待补充 |
@@ -1039,6 +1124,7 @@ Prototype / Internal Tool / Beta / Production / 待补充
 | Gate | 状态 | 原因 |
 | --- | --- | --- |
 | IPSI-G | 激活 | 默认激活，用于防止产品和系统未定义时过早实现 |
+| System Skeleton | 未确认 | 新产品、新功能或新页面进入实现前检查用户体系、后台管理、权限、状态和异常处理 |
 | UI/UX | 未确认 | 待补充 |
 | Data | 未确认 | 待补充 |
 | Security | 未确认 | 待补充 |
@@ -1085,6 +1171,7 @@ Prototype / Internal Tool / Beta / Production / 待补充
 | Requirement Discovery / Scope Triage Gate | 未确认 | 待补充 |
 | Git Management Gate | 未确认 | 待补充 |
 | Productization Boundary Gate | 未确认 | 待补充 |
+| System Skeleton Gate | 未确认 | 待补充 |
 | Verification Gate | 未确认 | 待补充 |
 | Production Readiness Gate | 未确认 | 待补充 |
 | Release / Rollback Gate | 未确认 | 待补充 |
@@ -1181,26 +1268,17 @@ echo "- Gemini CLI：.gemini/settings.json + GEMINI.md fallback"
 echo "- Antigravity：优先读取 AGENTS.md，必要时参考 GEMINI.md fallback"
 echo "- 详细 Gate：docs/gates.md"
 echo "- Git 管理规范：docs/git-workflow.md"
+echo "- Product Selection Gate：按需读取仓库模板中的 templates/product-selection.md"
+echo "- Product Selection Trigger：跨工具触发规则见 templates/product-selection-trigger.md"
+echo "- 协议备份目录：.ai-development-backups/（仅协议内容变化时生成）"
 echo ""
-echo "下一步："
-echo "1. 先补 PROJECT.md，完成 IPSI-G 的产品和系统定义"
-echo "2. 再补 AGENTS.md，添加项目专属规则"
-echo "3. 让 AI 读取 PROJECT.md 和 AGENTS.md"
-echo "4. 先判断任务等级和 Gate 激活清单"
-echo "5. 涉及 UI 时，先过 Idea / Product / System，再出 UI 草图"
-echo "6. UI 草图确认后，再进入实现"
-echo "7. 涉及高风险判断时，执行 Human Judgment Gate，区分事实、推测、反例和人的判断"
-echo "8. 多轮对话、阶段切换或上下文混乱时，执行 Context Management Gate"
-echo "9. 将决策、实现、验证或发布交给 AI 前，执行 Trust Calibration Gate"
-echo "10. 涉及 UI、数据、安全、性能、AI、依赖、成本、兼容、CS 核心概念、AI-XP、需求发现、Git 管理或产品化边界时，只读取 docs/gates.md 中对应 Gate"
-echo "11. 进入实现前，说明 TDD 状态和验证方式"
-echo "12. Review AI 生成 diff 前，选择 Light / Targeted / Full Review"
-echo "13. 验证前，先选择 Light / Targeted / Full Verification"
-echo "14. 涉及算法复杂度、性能、并发、网络、安全、权限、跨模块 Bug 或架构取舍时，执行 CS Core / Mental Model Gate"
-echo "15. 开发中发现新需求或范围变宽时，执行 Requirement Discovery / Scope Triage Gate"
-echo "16. 涉及分支、提交、PR、合并或回滚时，读取 docs/git-workflow.md"
-echo "17. 个人工具、原型或内部工具准备给别人用、未来收费或产生 AI/API 成本时，执行 Productization Boundary Gate"
-echo "18. 原型进入真实用户、生产、团队协作或长期维护前，执行 Production Readiness Gate"
-echo "19. 验证通过后，如需小重构，只做一次并再次验证"
-echo "20. 交付前，完成文档、验证、发布和回滚检查"
+echo "💡 开发者建议："
+echo "1. 可根据需要补充 PROJECT.md（产品定义）或 AGENTS.md（项目专属规则）。"
+echo "2. 现在可以直接向 AI 助手提出你的日常开发、重构或修 Bug 需求。"
+echo ""
+echo "🤖 AI 协作规范（AI 助手在后续开发中将自动遵守）："
+echo "- 自动评估 Gate 闸门与验证方案 (TDD / Verification)"
+echo "- 新产品、新功能或新页面进入实现前，先执行系统骨架检查 (System Skeleton)"
+echo "- 涉及 UI 先画 UI 草图，高风险决策引导人工确认 (Human Judgment)"
+echo "- 严格遵守 Git 规范与数据库资产保护规则 (Rule 3.18)"
 echo ""
