@@ -1,37 +1,30 @@
 # AI Development
 
-用于给项目初始化一套 AI 开发协议文件，方便 Codex、OpenCode、Claude Code、Gemini CLI 等工具读取统一的项目规则和上下文文档。
+用于给项目初始化一套轻量、高信噪比的 AI 开发协议文件，方便 Codex CLI、Claude Code、WorkBuddy / CodeBuddy、Gemini CLI / Antigravity 等工具读取统一的项目规则和上下文文档。
 
-这套协议的核心是：先用 IPSI-G 防止 AI 在产品未定义时过早写代码；新产品、新功能或新页面进入实现前，用 System Skeleton Gate 检查用户角色、后台管理、数据归属、权限边界、状态流转、异常处理和 MVP 暂不实现，避免开发到一半才发现缺用户体系或后台；新开发页面先用 UI Draft First 确认界面方向；涉及高风险判断时用 Human Judgment Gate 区分事实、推测、反例和人的判断；多轮对话或阶段切换时用 Context Management Gate 防止上下文污染；把决策、实现、验证或发布交给 AI 前用 Trust Calibration Gate 明确授权边界；review AI 生成 diff 前用 Review Load Budget Gate 控制审查负担；开发中发现新需求或范围变宽时，用 Requirement Discovery / Scope Triage Gate 区分主路径缺口、产品地基、体验增强、未来商业化和可选项；涉及算法复杂度、性能、并发、网络、安全、权限、跨模块 Bug 或架构取舍时，用 CS Core / Mental Model Gate 明确人类必须理解的计算机科学核心概念；涉及分支、提交、PR、合并或回滚时用 Git 管理规范保护历史和用户改动；个人工具、原型或内部工具准备给别人用、未来收费或产生 AI/API 成本时，用 Productization Boundary Gate 提前检查用户身份、数据归属、使用记录、权益额度和成本控制；原型进入真实用户或生产前用 Production Readiness Gate 检查上线条件；如果涉及界面、数据、安全、性能、AI 行为、依赖、成本或兼容性，再用对应 Gate 明确边界、指标和验证方式；实现前用 TDD 定义可验证行为；开发中用 AI-XP 短反馈循环约束 AI 的快速执行；交付前用 Documentation、Verification、Release / Rollback Gate 防止代码、文档、验证和上线脱节。
+这套协议的核心是：先用 IPSI-G 防止 AI 在产品未定义时过早写代码；新产品或涉及多角色/持久化数据/计费的模块进入实现前，按需用 System Skeleton Gate 与 Productization Boundary Gate 检查数据归属、权限边界与成本控制（个人单机小工具默认豁免，防止过度设计）；新开发页面先用 UI Draft First 确认界面方向；涉及高风险判断时用 Human Judgment Gate 区分事实、推测、反例和人的判断；原型进入真实用户或生产前用 Production Readiness Gate 与《上线前 5 道必过关卡》核对数据库 Expand/Contract 迁移顺序、重试错误鉴别器、计费 API 幂等与双重预算熔断；交付时按改动风险匹配验证预算（纯文档/注释/孤立微调享受零开销免验证极速交付）。
 
 ## 会创建什么
 
-执行初始化后，会在目标项目中创建：
+执行初始化后，会在目标项目中创建精简的核心协议文件（不再生成空白的 `prompts/*.md` 与空白的 `docs/*.md` 占位空壳）：
 
-- `AGENTS.md`：Codex / OpenCode 使用的项目规则
+- `AGENTS.md`：Codex CLI / WorkBuddy / Antigravity / OpenCode 使用的常驻项目协议（Version 3.0，约 190 行高信噪比路由表与核心红线）
 - `CLAUDE.md`：Claude Code 使用的极薄入口，导入 `AGENTS.md` 和 `PROJECT.md`
-- `GEMINI.md`：Gemini CLI fallback 说明
+- `GEMINI.md`：Gemini CLI / Antigravity 兜底说明
 - `.gemini/settings.json`：让 Gemini 默认读取 `AGENTS.md`
-- `PROJECT.md`：产品规划、需求说明、IPSI-G Gate 状态、System Skeleton Gate、UI Draft First、UI/UX 策略、数据策略、安全策略、性能策略、AI 评估、Human Judgment、上下文管理、AI 信任校准、review 预算、需求发现与范围分流、CS 核心心智模型、产品化边界、生产就绪、依赖策略、成本策略、兼容策略、TDD 策略、AI-XP 短反馈记录、文档策略、验证记录、发布回滚和需求变化记录
-- `docs/gates.md`：详细 Gate 清单，只在对应 Gate 被激活时读取
-- `templates/product-selection.md`：可选 Product Selection Gate 完整方法论，不会复制到每个项目
-- `templates/product-selection-trigger.md`：跨 AI 工具复用的轻量常驻触发规则
-- `docs/product-selection-integration.md`：Codex、Claude、Cursor、Gemini、ChatGPT 等工具的接入原则
-- `docs/project-map.md`：项目地图
-- `docs/architecture.md`：架构说明
-- `docs/data-flow.md`：数据流说明
-- `docs/decision-log.md`：技术决策记录
-- `docs/learning-notes.md`：学习记录
+- `PROJECT.md`：精简的跨会话项目事实源（仅保留产品定位与 MVP 边界、系统与数据流、按需系统骨架/产品化边界、上线前 5 道必过关卡核对表、关键决策变化记录 5 个核心模块，不再重复维护 23 个 Gate 的静态空表）
+- `docs/gates.md`：详细 Gate 清单，只在对应 Gate 被激活时按需读取对应章节
 - `docs/git-workflow.md`：Git 分支、提交、PR、review、合并、回滚和 AI 协作规范
-- `prompts/github-review.md`：GitHub PR 评审提示词
-- `prompts/feature-design.md`：功能设计提示词
-- `prompts/bug-fix.md`：问题修复提示词
-- `prompts/refactor.md`：重构提示词
+- `templates/product-selection.md`（位于本仓库）：可选 Product Selection Gate 完整方法论，不会复制到每个项目
+- `templates/product-selection-trigger.md`（位于本仓库）：跨 AI 工具复用的轻量常驻触发规则
+- `docs/product-selection-integration.md`（位于本仓库）：Codex CLI、Claude Code、WorkBuddy、Antigravity 等工具的接入原则
+
+> 注：架构说明（`docs/architecture.md`）、数据流（`docs/data-flow.md`）、技术决策记录（`docs/decision-log.md`）等文档仅在项目有真实沉淀内容时按需创建，避免空白模板文件干扰 AI 上下文。
 
 如果目标文件已经存在，脚本会按文件类型处理：
 
 - 协议入口文件：`AGENTS.md`、`CLAUDE.md`、`GEMINI.md`、`docs/gates.md` 会升级为当前最新模板；只有最终内容确实变化时，旧文件才会备份到 `.ai-development-backups/`。
-- 项目资料文件：`PROJECT.md`、`docs/project-map.md`、`docs/architecture.md`、`docs/data-flow.md`、`docs/decision-log.md`、`docs/learning-notes.md`、`docs/git-workflow.md` 和 `prompts/` 会保留原内容，并更新 `ai-development` 标记块。
+- 项目资料文件：`PROJECT.md` 和 `docs/git-workflow.md` 会保留原内容，并更新 `ai-development` 标记块。
 
 如果你需要在协议入口文件里保留项目专属规则，请放在本地补充标记中：
 
@@ -47,15 +40,15 @@
 
 ### 项目创建前：先做 Product Selection
 
-如果还没有项目目录，但已经在讨论新产品、新 SaaS、新 AI 功能或重大方向，不需要先运行 `ai-init`。直接让 AI 读取中央模板：
+如果还没有项目目录，但已经在讨论新产品、新 SaaS、新 AI 功能或重大方向，不需要先运行 `ai-init`。直接让 AI 读取本仓库的中央模板：
 
 ```text
-请读取 /Users/lingxr/Documents/myproduct/ai-development/templates/product-selection.md，
+请读取 templates/product-selection.md，
 对下面的想法执行 Product Selection Gate。不要写代码；请输出事实、假设、未知、
 最大未知、最便宜的决定性测试，以及 Continue / Define Only / Parking Lot / Reject 决策。
 ```
 
-把结果保存在项目外的想法记录中，例如 `~/product-ideas/<idea-name>.md` 或一个独立笔记，而不是复制到未来项目。只有决定继续后，再执行 `ai-init <project-dir>`，并将 Product Selection 的结论摘要填入新项目的 `PROJECT.md` 的 Idea / Product 部分。
+把结果保存在项目外的想法记录中，例如 `~/product-ideas/<idea-name>.md` 或一个独立笔记，而不是复制到未来项目。只有决定继续后，再执行 `ai-init <project-dir>`，并将 Product Selection 的结论摘要填入新项目的 `PROJECT.md` 的 Idea & Product 部分。
 
 这样可以区分两个阶段：
 
@@ -66,37 +59,34 @@
 
 为了避免忘记 Product Selection，不要只依赖手动输入文件名。将 `templates/product-selection-trigger.md` 放入目标工具的全局 Instructions、Rules 或 Skill 中；完整的 `templates/product-selection.md` 仍然只保留一份，触发后按需读取。具体适配方式见 `docs/product-selection-integration.md`。
 
-先给脚本增加执行权限：
+先给脚本增加执行权限（使用 `/bin/chmod` 避免本机 shim 拦截）：
 
 ```bash
-chmod +x /Users/lingxr/Documents/myproduct/ai-development/scripts/init-ai-project.sh
+/bin/chmod +x ./scripts/init-ai-project.sh
 ```
 
 在目标项目目录中执行：
 
 ```bash
-/Users/lingxr/Documents/myproduct/ai-development/scripts/init-ai-project.sh .
+/path/to/ai-development/scripts/init-ai-project.sh .
 ```
 
 也可以指定其他项目目录：
 
 ```bash
-/Users/lingxr/Documents/myproduct/ai-development/scripts/init-ai-project.sh /path/to/your/project
+./scripts/init-ai-project.sh /path/to/your/project
 ```
 
 ## 设置 ai-init 命令
 
-如果想在任意目录直接使用 `ai-init`，可以把它加到 zsh alias：
-
-执行前先确认脚本路径存在，并检查 `~/.zshrc` 里是否已经有 `ai-init`，避免重复追加：
+如果想在任意目录直接使用 `ai-init`，可以把它加到 `~/.zshrc` alias（将 `<repo-path>` 替换为本仓库实际路径）：
 
 ```bash
-test -f /Users/lingxr/Documents/myproduct/ai-development/scripts/init-ai-project.sh
 grep -n 'alias ai-init=' ~/.zshrc 2>/dev/null || true
 ```
 
 ```bash
-echo 'alias ai-init="/Users/lingxr/Documents/myproduct/ai-development/scripts/init-ai-project.sh"' >> ~/.zshrc
+echo 'alias ai-init="<repo-path>/scripts/init-ai-project.sh"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
@@ -213,20 +203,15 @@ AI 可以提供模式识别、方案生成、总结和推理辅助，但 AI 的�
 
 ## Trust Calibration Gate
 
-当你准备把决策、实现、验证、依赖变更、数据操作、发布或回滚交给 AI 时，先确认 AI 的权限级别。
+当任务涉及生产环境、真实数据改写、安全鉴权、权限调整、付费 API 调用或不可逆操作时，必须明确区分“底层沙箱能否执行”与“业务是否授权执行”：
 
-| 权限级别 | AI 可以做什么 | 必须用户确认 |
-| --- | --- | --- |
-| Suggest | 只给建议、方案、风险和验证方式 | 所有文件修改和命令执行 |
-| Draft | 生成草案、补全文档、准备 patch | 应用修改、运行高风险命令 |
-| Modify | 修改低风险文件、运行低风险验证 | 依赖、数据、权限、发布、删除 |
-| Execute | 执行已确认闭环内的修改和验证 | 不可逆操作、高风险上线、真实数据变更 |
+- **AI 可直接执行**：低风险闭环内的代码修改、只读分析与定向验证。
+- **必须用户确认**：删除数据/文件、数据库破坏性迁移（Contract 删列）、权限模型变更、消耗真实资金的批量 API 调用、Git 提交/推送/删分支与生产发布。
 
 通过标准：
 
-- AI 权限边界明确。
-- 高风险操作有人工确认点。
-- 禁止项被写清楚，而不是靠 AI 自己猜。
+- 工具执行权限与业务授权边界清晰分离。
+- 高风险与不可逆操作有明确人工确认点。
 
 ## Review Load Budget Gate
 
@@ -257,18 +242,19 @@ AI 可以提供模式识别、方案生成、总结和推理辅助，但 AI 的�
 
 ### AI 产品上线前必过 5 道关卡 Check List (阶段化防护)
 
-1. **数据库变更优先于代码部署 (Data Gate & Release Gate)**：
+1. **数据库变更与代码部署分阶段对齐 (Data Gate & Release Gate)**：
    - *新项目冷启动*：直接跑全量版本化 Migration。
-   - *存量项目迭代*：Migration 必须优先上线；新代码强制向前兼容（`NULLABLE` / `DEFAULT` 与 Fallback 避免 500）；涉及删/改列必须采用 `Expand & Contract`（两阶段扩展与收缩双写）。
-2. **为任务重试配备“错误鉴别器” (Performance Gate & System Gate)**：
-   - *可重试*：网络超时、偶发 5xx 等，配合 Exponential Backoff（指数退避）。
-   - *不可重试*：4xx 客户端错误、SQL 字段不存在等确定性失败，**立即终止任务并报警**。
-3. **计费 API 任务实现幂等性与断点续传 (Cost Gate & Productization Gate)**：
-   - 在数据库记录 `task_id` + `status`，重试时自动跳过已完成的高成本 LLM/付费 API 调用。
-4. **彻底隔离环境 API Key 并设置预算硬上限 (Security Gate & Cost Gate)**：
-   - 生产与测试环境 Key 彻底隔离；后台配置 **Hard Limit（硬上限强熔断）** 防死循环刷爆卡，配置 **Soft Limit（软上限预警）**。
+   - *存量迭代 · Expand 扩展阶段（加表/加可空列/加索引）*：DB Migration 必须先于新代码上线；新代码强制向前兼容（`NULLABLE` / `DEFAULT` 与 Fallback 避免 500）。
+   - *存量迭代 · Contract 收缩阶段（删列/改名/收紧非空约束）*：采用 `Expand & Contract` 拆分发布，**破坏性 DB 收缩操作必须在旧版本代码完全下线、确认无旧读写流量之后才可执行**。
+2. **为任务重试配备精准“错误鉴别器” (Performance Gate & System Gate)**：
+   - *可重试（配合指数退避 Exponential Backoff + Jitter / `Retry-After`）*：网络瞬断、`408 Request Timeout`、`409` 可恢复并发冲突、**`429 Too Many Requests`（限流）**、偶发 `500/502/503/504`。
+   - *不可重试（立即终止并告警）*：`400/401/403/404/422` 等确定性客户端错误、SQL Schema 错误（如字段不存在）。
+3. **计费 API 任务实现真正幂等与断点续传 (Cost Gate & Productization Gate)**：
+   - 优先向外部付费接口传递确定性幂等键（`Idempotency-Key`），并在本地数据库预写 `task_id` + 请求指纹 + `IN_FLIGHT` 中间态；重试时跳过已 `COMPLETED` 步骤，并核验崩溃遗留的 `IN_FLIGHT` 状态，防止“外部扣费成功但本地写库前崩溃”导致二次扣费。
+4. **彻底隔离环境 API Key 并建立双重预算熔断 (Security Gate & Cost Gate)**：
+   - 生产与测试环境 Key 彻底隔离；在**应用层代码自建单任务/单日调用次数与 Token 预算硬熔断器（Circuit Breaker）**，同时在服务商后台配置 **Hard Limit（若平台支持）** 与 **Soft Limit（软上限预警）**。
 5. **上线前进行“坏路径”（Bad Path）场景测试 (Verification Gate & Production Gate)**：
-   - 显式测试断网/DB断连、第三方 500、并发重复触发、额度耗尽，验证系统优雅降级而非死循环放大费用。
+   - 显式测试断网/DB断连、第三方 5xx/429、并发重复触发、额度耗尽，验证系统优雅降级而非死循环放大费用。
 
 固定检查：
 
@@ -303,20 +289,17 @@ Idea Gate
 
 可接受的 UI 草图形式：
 
-- 线框图
-- 低保真 UI 图
-- ASCII 布局
-- Mermaid 页面流程
-- 可预览原型
+- ASCII 布局 / Mermaid 状态与页面流程（适合轻量快速对齐）
+- 单文件可交互 HTML 原型 / Generative UI
+- 线框图 / 低保真视觉草图
 - 已确认的参考截图、Figma 或设计系统组件
 
 草图必须说明：
 
 - 核心用户动作
-- 页面区域
-- 主要组件
+- 页面区域与主要组件
 - 加载、空状态、错误、成功、禁用、编辑、确认、撤销等关键状态
-- 颜色方向和参考规范
+- 信息层级与颜色策略
 
 可跳过的情况：
 
@@ -328,7 +311,7 @@ Idea Gate
 
 AI-XP 不是完整照搬 XP，而是把 XP 的短反馈循环用于 Human-AI Pair Programming。
 
-每个实现闭环遵守：
+每个实质性代码实现闭环遵守：
 
 1. 先定义验证命令或手动验证步骤。
 2. TDD Gate 激活时，先说明 Red / Green。
@@ -338,41 +321,29 @@ AI-XP 不是完整照搬 XP，而是把 XP 的短反馈循环用于 Human-AI Pai
 
 ## Verification Budget
 
-验证不是越多越好，而是要与改动风险匹配。
+验证不是越多越好，而是要与改动风险严格匹配：
 
 | 级别 | 适用场景 | 执行 |
 | --- | --- | --- |
-| Light Verification | 文案修改、样式微调、单页面非关键 UI 调整、不涉及数据/AI/权限/写入 | 只跑相关测试，或 typecheck，或可复现手动检查 |
-| Targeted Verification | 单个功能闭环、API 调用链调整、页面请求方式变化、非持久化 AI 输出 | 跑相关前端/后端测试，跑 typecheck |
-| Full Verification | 数据写入、审核流程、AI 模型调用、保存到知识库、架构边界变化、发布前检查 | 后端测试全集、前端测试全集、typecheck、build |
+| **Exempt（零开销豁免）** | 纯文档、注释、排版、独立配置微调、不改变上下游调用的孤立文案/小样式改动 | **免编译、免测试、免写跳过理由**，直接极速交付 |
+| **Light Verification** | 单页面非关键 UI 调整、辅助脚本改动（不涉及数据/AI/权限/写入） | 定向语法/类型检查，或可复现手动检查 |
+| **Targeted Verification** | 单个功能闭环、API 调用链调整、页面请求方式变化、非持久化 AI 输出 | 跑相关前端/后端测试，跑 typecheck |
+| **Full Verification** | 数据写入、审核流程、AI 模型调用、保存到知识库、架构边界变化、发布前检查 | 受影响测试全集、typecheck、build、Bad Path 测试 |
 
 原则：
 
-- 不伪造验证结果。
-- 没跑就明确写未执行。
-- 不为了省 token 跳过关键链路验证。
-- 不为了形式主义对小改动做过度验证。
+- 不伪造验证结果；没跑就明确写未执行。
+- 纯文档和孤立微调零开销极速交付，不做形式主义重型验证。
+- 核心业务、状态机与计费链路改动绝不跳过测试闭环。
 
-## Token 控制方式
+## Token 与注意力控制方式
 
-协议已经拆成常驻规则和按需清单。`AGENTS.md` 保持短上下文，`docs/gates.md` 只在 Gate 被激活时读取。
+协议已拆分为常驻精简路由（`AGENTS.md`）与按需字典（`docs/gates.md`）：
 
-推荐使用方式：
-
-1. 每次任务先让 AI 输出任务等级和 Gate 激活清单。
+1. `AGENTS.md` 控制在 ~190 行内，避免常驻上下文过长导致大模型指令注意力稀释（Instruction Dilution）。
 2. Simple 任务不读取 `docs/gates.md`。
-3. Standard 任务只读取被激活的 Gate 章节。
-4. High-risk 任务读取对应 Gate 和 Release / Rollback Gate。
-5. 只有做完整审计、上线前检查或高风险改动时，才展开全部 Gate。
-
-示例：
-
-```text
-请先判断本次任务需要激活哪些 Gate。
-只展开激活 Gate。
-不适用 Gate 用一行说明原因。
-不要读取完整 docs/gates.md，除非这是完整审计或上线前检查。
-```
+3. Standard / High-risk 任务只按 `AGENTS.md` 第 6 节路由表读取被激活的 Gate 章节。
+4. 只有做完整审计或上线前全面检查时，才读取全部相关 Gate。
 
 ## Gate 参考标准
 
@@ -397,44 +368,30 @@ Performance Gate 默认参考：
 - AI Evaluation Gate：NIST AI RMF、OpenAI Evals、OWASP LLM / GenAI
 - Human Judgment Gate：Checkable Evidence、Assumption Labeling、Counterexample、Verification、Human-in-the-loop Decision
 - Context Management Gate：可信上下文清单、上下文压缩、过期上下文检测、冲突信息标记
-- Trust Calibration Gate：AI 权限分级、Human-in-the-loop、Least Privilege、不可逆操作人工确认
+- Trust Calibration Gate：工具沙箱执行权与业务授权分离、高危不可逆操作人工确认
 - Dependency Gate：Twelve-Factor App、OpenSSF Scorecard、npm package.json、Python Packaging
-- Cost Gate：FinOps Framework、FinOps Usage Optimization、OpenAI API rate limit guidance
+- Cost Gate：FinOps Framework、Idempotency-Key 幂等控制、应用层 Circuit Breaker 与平台限额双重防护
 - Compatibility Gate：MDN Baseline、npm engines / os / cpu、Python Requires-Python
 - CS Core / Mental Model Gate：算法复杂度、数据结构、性能、并发、网络、缓存、安全、权限、跨模块 Bug、架构取舍
-- AI-XP Feedback Gate：Extreme Programming 的短反馈循环、Human-AI Pair Programming、TDD Red / Green / Refactor
-- Documentation Gate：Diataxis、Google Developer Documentation Style Guide、NLPM 规则
+- AI-XP Feedback Gate：Extreme Programming 短反馈循环、Human-AI Pair Programming、TDD Red / Green / Refactor
+- Documentation Gate：Diataxis、Google Developer Documentation Style Guide、按需沉淀不建空壳
 - Review Load Budget Gate：review 预算、必看文件、关键调用链、二次 review 条件
 - Requirement Discovery / Scope Triage Gate：Core Path、Product Foundation、UX Enhancement、Future Monetization、Nice-to-have、Parking Lot
 - Git Management Gate：trunk-based workflow、Conventional Commits、PR review、squash merge、revert rollback、AI 协作边界
 - Productization Boundary Gate：用户身份、数据归属、使用记录、权益额度、AI/API 成本控制、BYOK、手动 Pro
-- System Skeleton Gate：用户角色、后台管理、数据归属、权限边界、状态流转、异常处理、MVP 暂不实现
-- Verification Gate：Verification Budget、Lint、Type Check、Unit Test、Integration / E2E Test、Build、Manual Verification
-- Production Readiness Gate：生产就绪清单、Observability、Error Handling、Backup、Rollback、Owner
-- Release / Rollback Gate：Google SRE Release Engineering、Google SRE rollback practice、Twelve-Factor Build / Release / Run、DORA metrics
+- System Skeleton Gate：多角色/后台/权限/数据归属/异常处理（个人单机小工具默认豁免）
+- Verification Gate：Exempt / Light / Targeted / Full 四级验证预算与 Bad Path 测试
+- Production Readiness Gate：生产就绪清单、上线前 5 道必过关卡、Observability、Backup、Rollback、Owner
+- Release / Rollback Gate：Google SRE Release Engineering、Twelve-Factor Build / Release / Run、DORA metrics
 
 ## 系统兼容性限制
 
-当前脚本是按照 macOS + zsh 环境编写的，脚本头部使用：
-
-```bash
-#!/bin/zsh
-```
-
-不同系统使用时需要注意：
-
-- macOS：推荐使用方式，默认自带 zsh，可以直接使用本文档里的命令。
-- Linux：如果系统没有 zsh，需要先安装 zsh，或者把脚本第一行改成 `#!/bin/bash` 后再使用。Linux 下的项目路径也需要改成自己的真实路径。
-- Windows：不能在原生 CMD 或 PowerShell 里直接运行这个 `.sh` 脚本。推荐使用 WSL、Git Bash 或其他类 Unix shell 环境；如果要在 PowerShell 原生环境使用，需要另外写 `.ps1` 脚本。
-
-`ai-init` 这个命令也不是系统自带命令。macOS 和 Linux 通常写入 `~/.zshrc` 或 `~/.bashrc`；Windows 的 WSL / Git Bash 也需要写入对应 shell 的配置文件。
+当前脚本按照 macOS + zsh 环境编写（`#!/bin/zsh`），内部文件操作已统一使用 `/bin/cp`、`/bin/mv`、`/bin/rm`、`/bin/mkdir` 绝对路径以兼容本机 WorkBuddy shim 环境，且模板目录通过 `${0:A:h:h}/templates` 动态解析，支持仓库目录任意移动。
 
 ## 其他限制
 
-- 当前脚本只负责初始化协议文件和基础文档，不会自动分析项目代码，也不会自动补全项目专属规则。
-- 如果目标项目里已经存在协议入口文件，脚本会把最新版模板放到文件顶部，并备份旧文件。
-- 如果目标项目里已经存在项目资料 Markdown 文件，脚本会保留原内容，并更新 `ai-development` 标记块中的协议内容。
-- 如果目标项目里已经存在 `.gemini/settings.json`，脚本会尝试把 `AGENTS.md` 合入 `context.fileName`；如果原文件不是合法 JSON，会生成 `.gemini/settings.json.ai-development.json` 参考文件，不会破坏原配置。
-- 当前脚本使用的是本机固定模板目录：`/Users/lingxr/Documents/myproduct/ai-development/templates`。如果移动了这个项目目录，需要同步修改脚本里的 `TEMPLATE_DIR`。
+- 当前脚本只负责初始化核心协议文件，不会预生成空白的 `prompts/*.md` 或空白的 `docs/project-map.md` 等空壳文件。
+- 如果目标项目里已经存在协议入口文件，脚本会升级为最新版模板，保留 `<!-- ai-development:local ... -->` 本地补充块，并将旧文件备份至 `.ai-development-backups/`。
+- 如果目标项目里已经存在 `PROJECT.md` 或 `docs/git-workflow.md`，脚本会保留原内容，并更新 `ai-development` 标记块中的协议内容。
+- 如果目标项目里已经存在 `.gemini/settings.json`，脚本会自动将 `AGENTS.md` 合入 `context.fileName`。
 - 这个工具只创建通用 AI 协议文件，不会自动配置第三方工具账号、API Key、MCP 服务或插件权限。
-- Antigravity 如果没有自动读取项目规则，需要在对话里手动要求它读取 `AGENTS.md`。

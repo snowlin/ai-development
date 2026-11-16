@@ -6,13 +6,11 @@
 
 ## 推荐接入方式
 
-| 工具类型 | 接入触发规则 | 完整模板 |
+| 工具 / 环境 | 接入触发规则 | 完整模板读取方式 |
 | --- | --- | --- |
-| 支持 Skill 的工具 | 安装为 Product Selection Skill | 由 Skill 引用或加载中央模板 |
-| 支持全局 Rules 的工具 | 放入全局规则 | 配置模板路径或上传模板 |
-| 只支持项目规则的工具 | 放入项目初始化模板 | 项目外讨论时手动提供或上传 |
-| ChatGPT Custom GPT | 放入 Instructions | 上传为 Knowledge |
-| 不支持本地文件的工具 | 粘贴触发规则 | 粘贴或上传完整模板 |
+| Codex CLI / Claude Code / WorkBuddy / Antigravity | 安装为公共 Skill（`~/.codex/skills/`）或合入全局 `~/.agents/AGENTS.md` | 触发后按需直接读取 `templates/product-selection.md` |
+| 仅加载项目级 `AGENTS.md` 的环境 | 由项目 `AGENTS.md` / `docs/gates.md#2.1` 保留触发条件 | 触发时按需读取中央仓库的 `templates/product-selection.md` |
+| 无本地文件系统权限的对话环境 | 在会话首轮粘贴 `templates/product-selection-trigger.md` | 触发后提供 `templates/product-selection.md` 全文 |
 
 ## 项目创建前
 
