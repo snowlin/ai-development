@@ -49,7 +49,7 @@ if [ ! -w "$PROJECT_DIR" ]; then
   exit 1
 fi
 
-for REQUIRED_TEMPLATE in AGENTS.md CLAUDE.md GEMINI.md gates.md git-workflow.md .gemini/settings.json; do
+for REQUIRED_TEMPLATE in AGENTS.md CLAUDE.md GEMINI.md .gemini/settings.json; do
   if [ ! -f "$TEMPLATE_DIR/$REQUIRED_TEMPLATE" ]; then
     echo "错误：缺少模板文件"
     echo "$TEMPLATE_DIR/$REQUIRED_TEMPLATE"
@@ -57,7 +57,7 @@ for REQUIRED_TEMPLATE in AGENTS.md CLAUDE.md GEMINI.md gates.md git-workflow.md 
   fi
 done
 
-/bin/mkdir -p "$PROJECT_DIR/docs" "$PROJECT_DIR/.gemini"
+/bin/mkdir -p "$PROJECT_DIR/.gemini"
 
 BACKUP_DIR="$PROJECT_DIR/.ai-development-backups"
 
@@ -265,16 +265,6 @@ merge_gemini_settings \
   "$TEMPLATE_DIR/.gemini/settings.json" \
   "$PROJECT_DIR/.gemini/settings.json"
 
-upgrade_protocol_file \
-  "$TEMPLATE_DIR/gates.md" \
-  "$PROJECT_DIR/docs/gates.md" \
-  "docs/gates.md"
-
-merge_from_file \
-  "$TEMPLATE_DIR/git-workflow.md" \
-  "$PROJECT_DIR/docs/git-workflow.md" \
-  "docs/git-workflow.md"
-
 merge_project_doc() {
   TARGET="$1"
   merge_generated_file "$TARGET" "PROJECT.md" <<'EOF'
@@ -341,12 +331,11 @@ echo "- Codex CLI：AGENTS.md"
 echo "- Claude Code：CLAUDE.md"
 echo "- WorkBuddy / CodeBuddy：AGENTS.md"
 echo "- Gemini CLI / Antigravity：.gemini/settings.json + AGENTS.md（GEMINI.md 兜底）"
-echo "- 详细 Gate 清单：docs/gates.md（按需读取）"
-echo "- Git 管理规范：docs/git-workflow.md"
-echo "- Product Selection Gate：按需读取 templates/product-selection.md"
+echo "- 通用 Gate / 原则 / Git 规范：由全局 ai-dev skill 按需加载"
+echo "- 立项与选品：由全局 product-selection skill 按需加载"
 echo "- 协议备份目录：.ai-development-backups/（仅协议内容变化时生成）"
 echo ""
 echo "💡 开发者建议："
-echo "1. 按需补充 PROJECT.md 中的产品边界与核心数据流（无需填写未激活的 Gate 表格）。"
-echo "2. 架构、数据流或决策沉淀文档仅在有真实内容时按需创建于 docs/，不再预生成空白占位文件。"
+echo "1. 按需补充 PROJECT.md 中的产品边界与核心数据流。"
+echo "2. 如尚未挂载全局 skill，请在 ai-development 仓库执行 ./scripts/sync-skills.sh。"
 echo ""
